@@ -85,13 +85,15 @@ jobs:
         - name: checkout code
           uses: actions/checkout@v4
           with:
-            token: ${{ secrets.GITHUB_TOKEN }}
+            token: ${{ secrets.GH_PAT }}
 
         - name: Update tag in kubernetes deployment manifest
           run: | 
                sed -i "s|image: .*|image: ${{ secrets.DOCKER_USERNAME }}/product-catalog:${{github.run_id}}|" kubernetes/productcatalog/deploy.yaml
         
         - name: Commit and push changes
+          env:
+            GITHUB_TOKEN: ${{ secrets.GH_PAT }} 
           run: |
             git config --global user.email "abhinayakuma@gmail.com"
             git config --global user.name "Abhinaya Kumar"
